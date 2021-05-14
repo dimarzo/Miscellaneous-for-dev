@@ -1,0 +1,132 @@
+Hibernate
+
+*********
+
+   Data Layer Communication
+______________________________
+
+JPA interfaces / Hibernate API
+______________ _______________
+
+          Hibernate
+______________________________
+
+            JDBC
+
+
+
+*********
+
+SessionFactory -> (singleton?) creazione e servizi(connections pool, cache, etc.) alle Session
+
+Session -> (singolo thread) singola unità di lavoro, mantiene una connessione JDBC (tra quelle del connection pool del SessionFactory) e crea una Transazione
+           permette il commit e il rollback
+
+Transaction -> una singola transazione sul db (astrazione del sistema di transazione del db in uso)
+
+Istanze -> POJO   * per i tipi primitivi usare classi Wrapper
+
+*** Types
+
+    ** Values Types ( basic, @Embeddable, @Collection) -> valori di colonna di un record
+
+       * basic : Hibernate types / JDBC types / Java Types (un registro risolve)
+
+                annotazioni : @basic (default) -> 2 attributi (optional : default permette valori NULL; fetch : eagerly/lazely?)
+                              @column -> attributo name specifica nome diverso da default = colonna tabella
+                              @enumerated -> per mappare i tipi enum 
+                              ...mappare i LOBs (large objects)...
+                              ...mappare i nationalized character data
+                              ...mappare UUID ?
+                              
+                              mappare oggetti date/time :
+                               -se si usano oggetti (date, time, timestamp) della libreria java.sql -> no annotations
+                               -se si usano oggetti delle librerie java.util (Date, Calendar) -> @Temporal 
+                                java.util.Date -> @Temporal(TemporalType.DATE, .TIME, .TIMESTAMP) 
+
+                               -java8 : java.time -> no annotation @Temporal (altrimenti eccezione)
+                                        DATE
+                                        java.time.LocalDate
+
+                                        TIME
+                                        java.time.LocalTime, java.time.OffsetTime
+
+                                        TIMESTAMP
+                                        java.time.Instant, java.time.LocalDateTime, java.time.OffsetDateTime, java.time.ZonedDateTime
+                                
+                                        ...specifico Timezone...
+
+                               ...@CreationTimestamp -> genera e inserisce il timestamp per un attributo/colonna
+                               ...@ValueGenerationType -> gestione avanzata degli attributi @generated
+                               ...@ColumnTransformer -> personalizzare il SQL di lettura e scrittura da DB di dato basic, ex. utilizzare per una colonna funzioni di crittografia del db
+
+
+ 
+
+                     ...Hibernate e SQL quoting (apici)...
+
+
+
+       *Embeddable types (classi che compongono valori di più colonne nel db) -> more object oriented...
+
+        @Embeddable -> classe che è attributo nell'entità
+        @Embedded -> attributo entità
+        @Target -> attributo espresso da una interfaccia che viene mappata da una classe @Embeddable che la implementa
+        @Parent -> permette di richiamare all'interno della classe embeddable un attributo che è del tipo della classe che fa da entità
+
+
+
+
+    
+    ** Entities Types -> record di tabella con chiave primaria
+
+       @Table -> permette di specificare oltre il nome della tabella.. catalog e schema del db?
+
+       - i metodi equals() e hashcode() di Object devono essere implementati solo per la classe che fa da chiave primaria (se è ad esempio composta)..?
+
+       - identificatori semplici per chiave primaria (@Id) ... identificatori per chiave composta?
+
+       - associazioni (@ManyToMany etc..) ?
+   
+       - collections (persistere attributi che sono collection)?
+
+       - natural ids -> non chiave primaria, ma colonna Unique che può essere utilizzata per recuperare record in modo più efficente da Hibernate?
+
+       - entità dinamiche (no portabilità con JPA) -> non oggetti POJO? 
+
+
+
+
+*** Naming
+
+(mapping tra nomi negli oggetti e nomi nelle tabelle)
+
+esplicitato in programmazione (@Table, @Column,.. )  o eseguito implicitamente da Hibernate
+
+
+
+                
+
+
+
+***Ereditarietà***
+
+4 metodi :
+
+-MappedSuperclass -> solo le tabelle delle sottoclassi con ciascuna i campi della super
+-Singletable -> una singola tabella (con colonna discriminator aggiunta) con le informazioni di sottoclassi e super
+-JoinedTable -> sottoclassi solo i propri campi ma con chiave primaria .. effettuato un join quando si interroga
+-TablePerClass -> sottoclassi e super tabelle complete di tutti i campi con chiave primaria
+
+
+
+*la strategia di ereditarietà "Table-per-class" accetta come generationType per la primary key AUTO
+
+
+
+
+
+
+
+
+

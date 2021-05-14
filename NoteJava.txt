@@ -1,0 +1,537 @@
+
+
+
+***** Eclipse *****
+
+
+
+
+*** 1. Debug Configuration ***
+
+
+*** 2. Tasti di scelta rapida *** 
+
+
+
+
+   1. Editor :
+             - ctrl + d -> cancella intera riga 
+             - ctrl + 7 -> commenta righe  
+             - ctrl + backspace -> cancella parola precedente 
+             - ctrl + alt + down -> copia riga
+             - ctrl + shift + x -> maiuscolo
+             - ctrl + shift + y -> minuscolo
+             - ctrl + shift + o -> (su import mancante) import disponibili
+             - ctrl (su Oggetto) -> Open Declaration (classe .java)
+             - ctrl + i -> indentazione 
+             - ctrl + shift + C -> commenta/decommenta
+             - ctrl + 1 -> quickfix
+             - Formattare ed indentare il codice (CTRL+SHIFT+F su Eclipse)
+
+
+   2. Debug :
+             - ctrl + shift + i -> per la linea di breakpoint pre-esegue il codice (oppure tasto destro + "watch") 
+             - F6 -> step over 
+
+             
+
+*** 3. QuickFix ***
+
+
+ctrl + 1 -> quickfix su un errore
+
+
+
+*** 4. Gestione di Build Path ***  
+
+
+
+
+ project -> properties -> java build path  (dipendenza di un package da un altro)
+                                                       - Add Jar (libreria nello stesso project ma package diverso)
+                                                       - Add External Jar (libreria in un project differente)
+                                                       - 
+plugins?
+
+
+
+*********************************
+
+
+******* Java SE 7 ********
+
+
+
+
+
+*** 1. Specificatori di visibilità (protected con ereditarietà e pacchetti) ***
+
+
+
+
+
+   * metodi, variabili di istanza, classi : 1. public (visibilità a tutte le classi)
+                                            2. private (metodi e variabili di istanza visibili solo alla classe stessa)
+			                    3. default (visibilità solo alle classi del package)
+			                    4. protected (metodi e variabili di istanza visibili solo alle classi del package ed alle sottoclassi, possibile l'override dei metodi)
+			  
+			                    5. final (non è consentito l'override del metodo, l'estensione della classe, le variabili sono costanti)
+			                    6. static (metodo di classe)
+			  
+    
+
+
+
+
+*** 2. generics (?) ***
+
+
+
+
+<Tipo>
+
+Introdotti in Java 5, permettono di creare "elementi parametrizzati", ovvero di specificare per un elemento il tipo con cui andrà ad operare (?)
+
+Ad esempio :  
+
+ArrayList lista = new ArrayList(); 
+
+non specificando il tipo della collezione, restituirà una collezione di Object e come tale
+
+ogni qualvolta opereremo su un oggetto della collezione dovremo adoperare un cast verso il tipo desiderato. Al contrario con i generics:  
+
+ArrayList<String> lista = new ArrayList<String>();
+
+ci restituirà esattamente una lista preparata a elaborare oggetti di tipo stringa.
+
+
+altri ex.
+
+Iterator<Double> 
+
+Callable<String> (interfaccia) 
+
+ArrayList<Callable<String>>
+
+Future<String>
+
+RecursiveTask<String>
+
+Predicate<Utente>
+
+
+
+
+*** X. annotations (?) ***
+
+
+
+Annotazioni utilizzate per specificare attributi di variabili, metodi e classi :
+
+@deprecated
+@override
+@suppressWarning("tipo")
+
+(?)
+
+
+
+
+*** 3. strutture dati ***
+
+
+
+
+   Strutture dati astratte (ottimizzate per) :
+
+   . Vettore (Ordinamento)
+   . Lista (Ordinamento, Ricerca, Elenco)
+   . Lista Concatenata (Inserimento, Eliminazione)
+   . Insieme (nessun ordine di inserimento, nessun duplicato, Ricerca, Elenco)
+   . Mappa (configurazioni)
+   . Coda
+   . Pila
+   . Albero di ricerca binario
+
+
+
+   Operazioni sulle strutture dati:  
+
+    . Ordinamento: Array -> QuickSort (per ordinare Oggetti questi devono implementare l'interfaccia Comparable, specificando come confrontare due elementi)
+                   List -> sort() (quale algoritmo?)
+    . Ricerca: Array -> Ricerca Binaria; ListaConcatenata -> Ricerca Lineare
+    . Elenco completo: Array -> Ciclo for; Liste e Set -> Iterator
+    . Inserimento
+    . Eliminazione
+
+                      - liste statiche -> array
+                      - liste dinamiche -> collection (List, ArrayList,LinkedList,..)  -->                  interfacce:        Collection               Map
+                      - mappe (java.util: Map, HashMap, TreeMap... )                                              (solo oggetti - classi wrapper)          .no ordine inserimento        
+                                                                                                                                   |
+                                                                                                                          __________________
+       ^                                                                                                                  |                 |
+       |                                                                                                               List                 Set
+       |                                                                                                                  |                 |
+                                                                                               .ordine inserimento                           .no ordine inserimento - insieme
+                                                                                               .duplicati                                    .no duplicati
+                                                                                               .lettura/aggiunta elementi per indice         .no indice
+classi :                                                                                                                                     .nessun metodo get() -> iterabile con Iterator
+
+- ArrayList : ArrayList<String>(int initialCapacity)
+  . get(int index)
+  . set(int index) ->  sostituisce elemento in posizione index (cancellando esistente)                                         
+  . add(int index) ->  sostituisce elemento in posizione index (spostando in avanti lista)                                      ^
+  . indexOf(Object elem) -> restituisce il primo elemento corrispondente all'oggetto elem di classe Object                     /|\
+  . toArray(Array[] array) -> restituisce array corrispondente a lista
+
+- HashMap : HashMap<Chiave,Valore>(int InitialCapacity)                                                                         |
+  . get(Object key) -> recupera elemento in base alla chiave
+  . put(Object key, Object value) -> aggiunge; se chiave già presente sostituisce
+  . remove(Object key)                                                                                                          |
+  . containsKey(Object key) -> Vero se la chiave è presente nella mappa
+  . Set<Object> keySet() -> elenco delle chiavi nella mappa
+                                                                                                                                |
+- Properties : (lettura di file di configurazione .properties come mappe chiave/valore)
+  . load(InputStream input) -> caricamento stream lettura da file .properties                                                   
+              |-> InputStream input = new FileInputStream(new File("C:\config.properties"));                                    |
+  . getProperty(Object key) -> ritorna la proprietà relativa alla chiave                                                     
+                                                                                                             l'interfaccia Collection implementa il metodo:
+                                                                                                                    public Iterator iterator();
+                
+                                                                                                            che ritorna oggetti Iterator con cui scorrere
+                                                                                                           tutti gli elementi di una Collection (metodi) :
+                                                                                                                         . hasNext()
+                                                                                                                         . next()
+                                                                                                                    
+
+- LinkedList : lista concatenata
+- HashSet : implementano interfaccia Set, ricerca elemento attraverso hashcode (metodo hashCode() di Object).
+- TreeMap e TreeSet : implentano Map e Set come alberi di ricerca binaria (ottimizzati quindi per la ricerca)
+                      Gli elementi della collezione devono implementare Comparable.
+- PriorityQueue : code con priorità (sarà estratto per prima l'elementoa priorità più alta). 
+               
+
+
+
+
+
+
+
+
+
+*** 4. Try with resources (chiusura automatica) ***
+
+
+
+
+
+per classi che implementano l'interfaccia java.lang.AutoCloseable (chiusura del flusso)     ->    try/catch/finally  (before java 7)
+
+                                                                                            ->    try with resource
+
+                                                                                                  try (BufferedReader br = new BufferedReader(new FileReader(path)))  ---> risorsa
+                                                                                                  {
+                                                                                                  return br.readLine();               |
+                                                                                                  }                                   |
+                                                                                                                                      |
+
+                                                                                                                             non è necessario chiudere la risorsa tra parentesi
+
+
+
+nota: "ex :    if the methods "readLine" (in try block)  and "close" (in finally block) both throw exceptions, then the parent method throws the exception thrown from the finally block; the exception thrown from the try block is suppressed. In contrast, if exceptions are thrown from both the try block and the try-with-resources statement, then the parent method throws the exception thrown from the try block; the exception thrown from the try-with-resources block is suppressed. In Java SE 7 and later, you can retrieve suppressed exceptions;"
+
+
+
+
+
+
+
+
+
+*** 5. Gestione delle eccezioni ***
+
+   
+
+            Errore in fase di compilazione o esecuzione (che porta o meno a crash) viene racchiuso in classe "throwable" (gerarchia di classi) con Info e azioni
+                                                                                                                     |
+                                                                                                  ________________________________________
+                                                                                                 |                                        |
+                                                                                             error                                        exception
+                                                                                         (errore JVM - crash sistema)                 (rilevate o meno dal compilatore)
+                                                                                        ex. OutOfMemoryError                              ex. IOException  
+                                                                                                                                          |
+                                                                                                                                ----------------------
+                                                                                                                                |                    |
+                                                                                                         try/catch(Exception e)/finally              throws Exception
+                                                                                                          *è il compilatore a rilevare             *il compilatore mi obbliga a prevedere il 
+                                                                                                                     l'eccezione.              lancio dell'eccezione ma non la gestisco, la 
+                                                                                                           Gestita nel codice.                   demando al chiamante, fino al main che 
+                                                                                                     (più catch possibili)                      terminerà senza gestire.
+                                                                                                                                                ** If(str == "pippo")
+                                                                                                                                                  throw new Exception();
+                                                                                                        **il blocco finally                   con questa clausola posso decidere di 
+                                                                                                    verrà comunque eseguito                 lanciare un'eccezione non prevista dal 
+                                                                                                                                                   compilatore.
+
+*** 6. Stream I/O ***
+
+
+
+Operazioni su file e directory:                         Classi del package java.io
+
+. creare/cancellare                                      . File
+. rinominare                                             .  -
+. ricercare                                              .  -
+. scrivere                                               . FileWriter, BufferedWriter, PrintWriter
+. leggere                                                . FileReader, BufferedReader
+
+
+
+FileWriter/Reader -> lettura/scrittura su testo un carattere per volta
+BufferedWriter/Reader -> lettura/scrittura su testo in blocchi memorizzati in buffer
+PrintWriter -> =BufferedWriter ma consente la scrittura di testo formattato
+
+Creare un oggetto in memoria che rappresenta un file o directory -->  File file = new File(String path);  
+
+                                                                      ATTENZIONE : L'ISTANZIAZIONE DELL'OGGETTO NON COMPORTA LA CREZIONE SUL DISCO RIGIDO
+                                                                                   DEL FILE.
+
+                                                                                   CREARE FISICAMENTE UN NUOVO FILE : createNewFile()
+                                                                                       
+                                                                                   CREARE FISICAMENTE UNA CARTELLA : mkdir()
+
+Scrivere su file --> FileWriter writer = new FileWriter(File file);
+      
+                     .write("Stringa di testo")
+                     .close -> chiude il flusso verso il file     *** in una clausola try/catch/finally da inserire nel finally
+                     flush() -> assicura che tutto il testo sia stato scritto
+
+
+Scrivere su file in maniera bufferizzata --> BufferedWriter writer= new Buffered Writer(FileWriter  fw);
+(e su più linee)                             (parametro un ulteriore classe di scrittura su file di tipo FileWriter)
+
+                                             .newLine() -> scrive a capo
+
+                                             .println() -> metodo di PrintWriter
+                                                 |___________________________________________ metodo utilizzato dalle servlet per scrivere flusso di testo Html 
+
+
+
+Leggere file un carattere per volta --> new FileReader(File file)
+
+                                           .read(char[] array) -> memorizza i caratteri letti uno alla volta in array
+                                     
+                                           .close()
+
+
+
+
+Leggere file un carattere per volta in maniera bufferizzata --> new BufferedReader(FileReader fr);  
+                                                                (parametro un ulteriore classe di scrittura su file di tipo FileReader)
+
+
+
+
+***ATTENZIONE : UTILIZZARE PER LA GESTIONE DELLE ECCEZIONI SEMPRE LA CLAUSOLA TRY/CATCH/FINALLY PER POTER COMUNQUE CHIUDERE IL FLUSSO.
+
+
+
+                                         * LETTURA DA TASTIERA *
+
+
+I tasti digitati sulla tastiera vengono memorizzati nella variabile statica "in" della classe "System" del core di java
+"in" è un oggetto di tipo InputStream. 
+Per leggere lo stream presente nella variabile possiamo utilizzare due classi:
+
+java.io.InputStreamReader(System.in)  --> va passata come parametro ad un oggetto di tipo BufferedReader ed eseguito poi il readLine()
+java.util.Scanner(System.in)  -->  nextLine();   lo scanner va poi chiuso con close()
+
+
+
+GESTIONE DEGLI STREAMS IN JAVA (?)
+
+
+
+
+*** 7. Gestione delle date ***
+
+
+
+classi :
+
+. java.sql.Timestamp
+. java.util.Date (deprecated)
+. java.util.Calendar (abstract) -> GregorianCalendar                         ex. Calendar cal = new GregorianCalendar();
+                                                                                 cal.setTime(new Date());     --> data in millis a partire da 1/1/1970
+. java.time***                                                                   cal.get(Calendar.YEAR);      --> const della classe astratta
+  
+  . LocalDate   (classe IMMUTABILE, non estensibile)  --> metodi factory :  
+  . LocalTime   (gestione delle ore)                                       LocalDate loc = LocalDate.now();  (?)     LocaldDate.of(2018,5,1); (impostare il giorno)
+  . LocalDateTime                                                          loc.toString()   -> 01/05/2018
+  
+  . Period  (periodo di tempo in anni mesi giorni)
+  . Duration (periodo di tempo in secondi, millisecondi..)                 Duration interval = Duration.ofSeconds(3, 10) -> 3.10 sec
+                                                                                                                  |_>   istanza di LocaDate
+. java.text.SimpleDateFormat (formattazione delle date)                    new SimpleDateFormat("dd/MM/yyyy")
+                                                                                                    |_>  template 
+
+
+
+
+*** 8. Testing con JUnit 4 ***
+
+
+. Test case ( test sui metodi )
+. Test suite             ------------------->                automatizza più test case (utile con strumenti di CI come Jenkins)
+
+
+La classe Test Case non definisce un costruttore; il metodo da testare non avrà parametri e ritornerà void; il metodo deve lanciare il throws di Exception
+
+annotazioni:
+
+
+@test -> il metodo è un test    .
+@Before -> metodo eseguito prima di tutti i test
+@After -> metodo eseguito dopo di tutti i test
+@BeforeClass -> metodo da eseguire prima del primo test
+@AfterClass -> metodo da eseguire dopo il primo test
+
+
+
+classe Assert  ... metodi assertXXX()
+
+
+ATTENZIONE :  utilizzare JUnit per la verifica del lancio corretto di una eccezione
+
+
+Test Parametrizzati : piuttosto che passare ad un test case di volta in volta dei parametri in ingresso è possibile automatizzare 
+                      e passare al test case un elenco di parametri da eseguire uno per volta
+
+
+
+
+
+
+
+
+
+
+
+
+*************************************************
+
+
+
+******** Java SE 8 **********
+
+
+***
+
+
+
+*** 9. Lambda expressions ***
+
+
+
+Funzione anonima, passata come argomento ad un metodo o restituita da un metodo. Funzione breve utilizzata una tantum, al posto di implementare un metodo classico.
+
+Migliora la gestione delle liste (elenco e ricarca).
+
+Migliora la gestione della concorrenza, migliorando le performance in ambiente multicore.
+
+ex.
+
+myvar.myMethod(e -> System.out.println(" ... "));
+
+
+
+
+***** Functional Interfaces ******        annotation -> @FunctionalInterface
+
+
+Le interfacce funzionali sono interfacce che definiscono un solo metodo.
+
+
+Prima di Java 8 :                                         Java 8 :
+
+
+Interfaccia                                              Interfaccia Funzionale
+(metodo non implementato)                                (metodo non implementato)   
+
+     |                                                        |
+
+Classe implementante                                     InterfacciaFunzionale  ClasseImplementante = (param1,param2,..) ->  param1 * param2;  (implementazione al volo del metodo)
+(metodo implementato)                                    ClasseImplementante.metodo();
+
+     |
+
+
+Istanza della classe.metodo()
+
+
+
+
+Sintassi :
+
+() -> {istruzioni; ... ;}
+
+() ->  espressione;
+
+(lista argomenti senza il tipo) -> {istruzioni; ... ;}
+
+(lista argomenti senza il tipo) -> espressione;
+
+
+
+                                      *    Utlizzate nella definizione di "funzioni superiori" ovvero funzioni che prendono in ingresso altre funzioni 
+
+                                           Prima di Java 8 e delle Lambda expressions c'erano classi dedicate : Runnable, Comparator ...
+
+                                           scopi : ordinare liste o collezioni, eseguire task pianificato
+
+                                            |
+                                            |__ Snellita l'implementazione dell'interfaccia Runnable :
+
+                                                 La classe Thread per il multithreading ad esempio ha un costruttore che prevede come parametro un oggetto che implementa l'interfaccia                                                  Runnable   new Thread(Runnable runner);  e implementa il metodo run() che specifica cosa il thread farà in esecuzione.
+                                                 (Questo quando non è possibile creare una classe MyThread che estenda Thread e sovrascriva il metodo run() di Thread)
+
+                                                 con le lambda exspressions  :
+
+
+
+                                                 new Thread(() -> {System.out.println(" ... ")});    ->   viene passata l'implementazione del metodo run().
+
+
+
+
+
+
+*  ATTENZIONE all'utilizzo dei flussi di controllo nelle espressioni lambda
+              ogni ramo del flusso dovrà lanciare una eccezione...
+
+
+
+
+            un package in cui si trovano numerose interfacce funzionali utili :      java.utils.function
+
+
+                                                                                     . Predicate   ->   Utile per passare un criterio di ricerca come parametro ad un metodo che implementa                                                                                                          la ricerca in una lista 
+                                                                                    
+
+                                                                                     . Consumer    ->   Template utilizzato per elencare una lista in modo snello 
+                                                                                     . Supplier    ->                              """                
+                                                                                     . Function    ->   Utile per passare in input un blocco di codice
+                                                                                     . UnaryOperator
+                                                                                     . BinaryOperator
+
+
+
+
+
+
+
+
+
+
+

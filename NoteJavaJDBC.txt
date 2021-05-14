@@ -1,0 +1,102 @@
+*** Java e Database ***
+
+
+Jdbc (connettore) è un .jar da inserire nel build path
+
+
+**** Mysql da shell :
+
+mysql.exe -u root -p password 
+
+***********
+
+
+Create DB :
+
+CREATE SCHEMA `corso_java`; 
+
+
+***********
+
+
+Create table :
+
+CREATE TABLE `corso_java`.`clienti` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `nome` VARCHAR(255) NULL,
+  `cognome` VARCHAR(255) NULL,
+  `email` VARCHAR(100) NULL,
+  `telefono` VARCHAR(20) NULL,
+  PRIMARY KEY (`id`));
+
+
+***********
+
+
+Add foreign key :
+
+ALTER TABLE `corso_java`.`ordini` 
+ADD INDEX `clienti_fk_idx` (`id_cliente` ASC) VISIBLE;
+;
+ALTER TABLE `corso_java`.`ordini` 
+ADD CONSTRAINT `clienti_fk`
+  FOREIGN KEY (`id_cliente`)
+  REFERENCES `corso_java`.`clienti` (`id`)
+  ON DELETE CASCADE
+  ON UPDATE NO ACTION;
+
+
+
+***********
+
+
+Populate table  :
+
+
+INSERT INTO `corso_java`.`clienti` (`nome`, `cognome`, `email`, `telefono`) VALUES ('Dario ', 'Di Marzo', 'dimarzo.dario@hotmail.it', '3245633754');
+INSERT INTO `corso_java`.`clienti` (`nome`, `cognome`, `email`, `telefono`) VALUES ('Mauro', 'De Matteis', 'mauro.dematteis@live.it', '3270435671');
+INSERT INTO `corso_java`.`clienti` (`nome`, `cognome`, `email`, `telefono`) VALUES ('Emiliamo', 'Carico', 'carico.emiliano@live.it', '3339001317');
+
+
+
+
+***********
+
+
+
+Delete row :
+
+
+DELETE FROM `corso_java`.`ordini` WHERE (`id` = '8');
+
+
+
+***********
+
+
+
+Read rows :
+
+
+SELECT o.importo, c.cognome, c.telefono 
+FROM ordini AS o , clienti AS c 
+WHERE o.id_cliente = c.id; 
+
+
+
+
+**** CLASSI JAVA DI JDBC 
+
+
+. MySqlDataSource
+. PreparedStatement
+. ResultSet
+
+
+
+
+
+
+
+
+
